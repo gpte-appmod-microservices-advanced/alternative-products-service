@@ -4,32 +4,29 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 
-import java.util.Properties;
-
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.wildfly.swarm.Swarm;
-import org.wildfly.swarm.arquillian.CreateSwarm;
-import org.wildfly.swarm.arquillian.DefaultDeployment;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-
-@DefaultDeployment
 @RunWith(Arquillian.class)
 public class RestApiTest {
-    
-    private static String port = System.getProperty("arquillian.swarm.http.port", "18080");
-    
-    @CreateSwarm
-    public static Swarm newContainer() throws Exception {
-        Properties properties = new Properties();
-        properties.put("swarm.http.port", port);
-        return new Swarm(properties).withProfile("local");
+
+    private static String port = "18080";
+
+    @Deployment
+    public static Archive<?> createDeployment() {
+        return ShrinkWrap.create(WebArchive.class)
+                .addPackages(true, RestApplication.class.getPackage())
+                .addAsResource("project-test.yml", "project-defaults.yml");
     }
     
     @Before
@@ -74,6 +71,4 @@ public class RestApiTest {
             .contentType(ContentType.JSON)
             .body("outcome", equalTo("UP"));
     }
-    
-
 }

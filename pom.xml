@@ -10,16 +10,16 @@
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <version.wildfly.swarm>7.0.1.redhat-20</version.wildfly.swarm>
-    <version.wildfly.swarm.community>2017.10.2</version.wildfly.swarm.community>
-    <version.fabric8-maven-plugin>3.5.28</version.fabric8-maven-plugin>
+    <version.thorntail>2.2.0.Final-redhat-00021</version.thorntail>
+    <version.thorntail.community>2.2.0.Final</version.thorntail.community>
+    <version.fabric8-maven-plugin>3.5.41</version.fabric8-maven-plugin>
   </properties>
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.wildfly.swarm</groupId>
+        <groupId>io.thorntail</groupId>
         <artifactId>bom</artifactId>
-        <version>${version.wildfly.swarm}</version>
+        <version>${version.thorntail}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -27,25 +27,25 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>org.wildfly.swarm</groupId>
+      <groupId>io.thorntail</groupId>
       <artifactId>cdi</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.wildfly.swarm</groupId>
+      <groupId>io.thorntail</groupId>
       <artifactId>undertow</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.wildfly.swarm</groupId>
+      <groupId>io.thorntail</groupId>
       <artifactId>jaxrs-jsonp</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>monitor</artifactId>
+      <groupId>io.thorntail</groupId>
+      <artifactId>microprofile-health</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.wildfly.swarm</groupId>
+      <groupId>io.thorntail</groupId>
       <artifactId>arquillian</artifactId>
-      <version>${version.wildfly.swarm.community}</version>
+      <version>${version.thorntail.community}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -64,9 +64,9 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.wildfly.swarm</groupId>
-        <artifactId>wildfly-swarm-plugin</artifactId>
-        <version>${version.wildfly.swarm}</version>
+        <groupId>io.thorntail</groupId>
+        <artifactId>thorntail-maven-plugin</artifactId>
+        <version>${version.thorntail}</version>
         <executions>
           <execution>
             <goals>
@@ -107,6 +107,7 @@
             <version>${version.fabric8-maven-plugin}</version>
             <executions>
               <execution>
+                <phase>package</phase>
                 <goals>
                   <goal>resource</goal>
                   <goal>build</goal>
@@ -116,17 +117,17 @@
             <configuration>
               <generator>
                 <includes>
-                  <include>wildfly-swarm</include>
+                  <include>thorntail-v2</include>
                 </includes>
-                <config>
-                  <wildfly-swarm>
-                    <fromMode>isTag</fromMode>
-                    <from>redhat-openjdk18-openshift:1.1</from>
-                  </wildfly-swarm>
-                </config>
                 <excludes>
                   <exclude>webapp</exclude>
                 </excludes>
+                <config>
+                  <thorntail-v2>
+                    <fromMode>isTag</fromMode>
+                    <from>redhat-openjdk18-openshift:1.4</from>
+                  </thorntail-v2>
+                </config>
               </generator>
             </configuration>
           </plugin>
